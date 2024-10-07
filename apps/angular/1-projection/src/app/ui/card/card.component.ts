@@ -1,6 +1,10 @@
-import { NgFor, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { randStudent, randTeacher } from '../../data-access/fake-http.service';
+import { CityStore } from '../../data-access/city.store';
+import {
+  randomCity,
+  randStudent,
+  randTeacher,
+} from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
 import { TeacherStore } from '../../data-access/teacher.store';
 import { CardType } from '../../model/card.model';
@@ -12,21 +16,16 @@ import { ListItemComponent } from '../list-item/list-item.component';
     <div
       class="flex w-fit flex-col gap-3 rounded-md border-2 border-black p-4"
       [class]="customClass">
-      <img
-        *ngIf="type === CardType.TEACHER"
-        src="assets/img/teacher.png"
-        width="200px" />
-      <img
-        *ngIf="type === CardType.STUDENT"
-        src="assets/img/student.webp"
-        width="200px" />
-
-      <section>
-        <app-list-item
-          *ngFor="let item of list"
-          [name]="item.firstName"
-          [id]="item.id"
-          [type]="type"></app-list-item>
+      <ng-content select="image" />
+      <section class="flex flex-col gap-1">
+        @for (item of list; track item.id) {
+          <app-list-item>
+            {{ item.firstName || item.name }}
+            <button ngProjectAs="button" (click)="delete(item.id)">
+              <img alt="trash" class="h-5" src="/assets/svg/trash.svg" />
+            </button>
+          </app-list-item>
+        }
       </section>
 
       <button
@@ -36,19 +35,34 @@ import { ListItemComponent } from '../list-item/list-item.component';
       </button>
     </div>
   `,
+  styles: `
+    .bg-light-green {
+      background-color: rgba(0, 250, 0, 0.1);
+    }
+
+    .bg-light-red {
+      background-color: rgba(250, 0, 0, 0.1);
+    }
+    .bg-light-blue {
+      background-color: rgba(0, 0, 250, 0.1);
+    }
+  `,
   standalone: true,
-  imports: [NgIf, NgFor, ListItemComponent],
+  imports: [ListItemComponent],
 })
 export class CardComponent {
   @Input() list: any[] | null = null;
   @Input() type!: CardType;
-  @Input() customClass = '';
-
-  CardType = CardType;
+  @Input() customClass:
+    | 'bg-light-green'
+    | 'bg-light-red'
+    | 'bg-light-blue'
+    | '' = '';
 
   constructor(
     private teacherStore: TeacherStore,
     private studentStore: StudentStore,
+    private cityStore: CityStore,
   ) {}
 
   addNewItem() {
@@ -56,6 +70,18 @@ export class CardComponent {
       this.teacherStore.addOne(randTeacher());
     } else if (this.type === CardType.STUDENT) {
       this.studentStore.addOne(randStudent());
+    } else if (this.type === CardType.CITY) {
+      this.cityStore.addOne(randomCity());
+    }
+  }
+
+  delete(id: number) {
+    if (this.type === CardType.TEACHER) {
+      this.teacherStore.deleteOne(id);
+    } else if (this.type === CardType.STUDENT) {
+      this.studentStore.deleteOne(id);
+    } else if (this.type === CardType.CITY) {
+      this.cityStore.deleteOne(id);
     }
   }
 }
