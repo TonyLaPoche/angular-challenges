@@ -1,10 +1,7 @@
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
-import { ErrorInterceptor } from './shared/components/todos/error.interceptor';
+import { INTERCEPTORS } from './core/interceptors';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideHttpClient(),
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-  ],
+  providers: [provideHttpClient(withInterceptors(INTERCEPTORS))],
 };

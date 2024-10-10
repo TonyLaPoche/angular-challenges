@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { TodoService } from '../todo.service';
 import { Todo } from './todo.model';
 
@@ -11,14 +17,17 @@ import { Todo } from './todo.model';
     <li class="item">
       <div class="id">
         <ng-content select="id"></ng-content>
+        <input type="text" />
       </div>
       <div class="content">
         <ng-content select="content"></ng-content>
       </div>
       <div class="config">
-        <button (click)="update()">Update</button>
-        <button (click)="delete()">Delete</button>
-        <button (click)="error()">Error</button>
+        <button type="button" (click)="update()">Update</button>
+        <button type="button" (click)="onDelete.emit(this.todo().id)">
+          Delete
+        </button>
+        <button type="button" (click)="error()">Error</button>
       </div>
     </li>
   `,
@@ -47,26 +56,25 @@ import { Todo } from './todo.model';
       }
     }
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoComponent {
-  @Input() todo?: Todo;
+  todo = input.required<Todo>();
   todoService = inject(TodoService);
+  onUpdate = output<Todo>();
+  onDelete = output<number>();
 
   update() {
-    if (this.todo) {
-      this.todoService.updateTodo(this.todo);
-      console.log('update todo');
-    }
+    const newTodo: Todo = {
+      ...this.todo(),
+      title: 'TEST ' + this.todo().id,
+    };
+    this.onUpdate.emit(newTodo);
   }
-  delete() {
-    if (this.todo) {
-      this.todoService.deleteTodo(this.todo);
-      console.log('delete todo');
-    }
-  }
+
   error() {
     if (this.todo) {
-      this.todoService.errorTodo(this.todo);
+      this.todoService.errorTodo(this.todo());
       console.log('delete todo');
     }
   }

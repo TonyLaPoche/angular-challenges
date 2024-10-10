@@ -11,22 +11,16 @@ export class TodoService {
   #todos = signal<Todo[]>([]);
   todos = computed(this.#todos);
 
-  getTodos(): void {
-    this.http.get<Todo[]>(this.url).subscribe((todos) => {
-      this.#todos.set(todos);
-    });
+  getTodos() {
+    return this.http.get<Todo[]>(this.url);
   }
 
-  updateTodo(todo: Todo): void {
-    this.http.put<Todo[]>(`${this.url}/${todo.id}`, todo).subscribe((todos) => {
-      this.#todos.update((todo) => todo);
-    });
+  updateTodo(todo: Todo) {
+    return this.http.put<Todo[]>(`${this.url}/${todo.id}`, todo);
   }
 
-  deleteTodo(todo: Todo): void {
-    this.http.delete<Todo>(`${this.url}/${todo.id}`).subscribe((todos) => {
-      this.#todos.update((todo) => todo);
-    });
+  deleteTodo(todo: Todo) {
+    return this.http.delete<Todo>(`${this.url}/${todo.id}`);
   }
 
   errorTodo(todo: Todo): void {
