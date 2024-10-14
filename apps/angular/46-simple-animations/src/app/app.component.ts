@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { LevelOneComponent } from './level-one.component';
 
 @Component({
   standalone: true,
-  imports: [],
+  imports: [LevelOneComponent],
   selector: 'app-root',
   styles: `
     section {
@@ -19,37 +20,7 @@ import { Component } from '@angular/core';
   `,
   template: `
     <div class="mx-20 my-40 flex gap-5">
-      <section>
-        <div>
-          <h3>2008</h3>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae
-            mollitia sequi accusantium, distinctio similique laudantium eveniet
-            quidem sit placeat possimus tempore dolorum inventore corporis atque
-            quae ad, nobis explicabo delectus.
-          </p>
-        </div>
-
-        <div>
-          <h3>2010</h3>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae
-            mollitia sequi accusantium, distinctio similique laudantium eveniet
-            quidem sit placeat possimus tempore dolorum inventore corporis atque
-            quae ad, nobis explicabo delectus.
-          </p>
-        </div>
-
-        <div>
-          <h4>2012</h4>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae
-            mollitia sequi accusantium, distinctio similique laudantium eveniet
-            quidem sit placeat possimus tempore dolorum inventore corporis atque
-            quae ad, nobis explicabo delectus.
-          </p>
-        </div>
-      </section>
+      <app-level-one></app-level-one>
 
       <section>
         <div class="list-item">
