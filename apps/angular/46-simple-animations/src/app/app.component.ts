@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { LevelOneComponent } from './level-one.component';
+import { LevelTwoComponent } from './level-two.component';
 
 @Component({
   standalone: true,
-  imports: [LevelOneComponent],
+  imports: [LevelOneComponent, LevelTwoComponent],
   selector: 'app-root',
   styles: `
     section {
@@ -19,40 +20,9 @@ import { LevelOneComponent } from './level-one.component';
     }
   `,
   template: `
-    <div class="mx-20 my-40 flex gap-5">
+    <div class="mx-20 my-40 flex flex-col gap-5">
       <app-level-one></app-level-one>
-
-      <section>
-        <div class="list-item">
-          <span>Name:</span>
-          <span>Samuel</span>
-        </div>
-
-        <div class="list-item">
-          <span>Age:</span>
-          <span>28</span>
-        </div>
-
-        <div class="list-item">
-          <span>Birthdate:</span>
-          <span>02.11.1995</span>
-        </div>
-
-        <div class="list-item">
-          <span>City:</span>
-          <span>Berlin</span>
-        </div>
-
-        <div class="list-item">
-          <span>Language:</span>
-          <span>English</span>
-        </div>
-
-        <div class="list-item">
-          <span>Like Pizza:</span>
-          <span>Hell yeah</span>
-        </div>
-      </section>
+      <app-level-two></app-level-two>
     </div>
   `,
 })

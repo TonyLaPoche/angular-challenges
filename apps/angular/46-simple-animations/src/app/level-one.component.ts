@@ -12,7 +12,7 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   template: `
-    <section [@startAnimation]="'start'">
+    <section @startAnimation>
       <div>
         <h3>2008</h3>
         <p>
@@ -47,12 +47,12 @@ import { Component } from '@angular/core';
   styles: ``,
   animations: [
     trigger('startAnimation', [
-      state('start', style({ backgroundColor: 'blue' })),
-    ]),
-    transition('startAnimation => start', [
-      animate('1s', style({ backgroundColor: 'red' })),
+      state('void', style({ backgroundColor: 'blue', opacity: 0 })),
+      transition(':enter', [
+        style({ backgroundColor: 'blue', opacity: 0 }),
+        animate('1s ease-in', style({ backgroundColor: 'red', opacity: 1 })),
+      ]),
     ]),
   ],
-  // changeDetection:ChangeDetectionStrategy.OnPush
 })
 export class LevelOneComponent {}
