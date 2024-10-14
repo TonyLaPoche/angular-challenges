@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-top',
+  standalone: true,
+  imports: [],
   template: `
     I am a very heavy, expensive component that should be lazy loaded.
   `,

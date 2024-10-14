@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-placeholder',
+  standalone: true,
+  imports: [],
   template: `
     I'm a placeholder component.
   `,
