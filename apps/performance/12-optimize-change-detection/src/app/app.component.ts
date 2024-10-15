@@ -47,7 +47,6 @@ export class AppComponent {
   private readonly cdr = inject(ChangeDetectorRef); // Injection de ChangeDetectorRef
 
   constructor() {
-    // Sortir de la zone Angular pour éviter les détections de changements inutiles pendant le scroll
     this.zone.runOutsideAngular(() => {
       fromEvent(window, 'scroll')
         .pipe(
