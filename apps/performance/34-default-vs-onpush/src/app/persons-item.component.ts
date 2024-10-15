@@ -12,7 +12,7 @@ import { Person } from './person';
 import { PersonService } from './person.service';
 
 @Component({
-  selector: 'app-person',
+  selector: 'app-persons-item',
   imports: [CDFlashingDirective, MatListItem, ReactiveFormsModule],
   standalone: true,
   template: `
@@ -29,7 +29,7 @@ import { PersonService } from './person.service';
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PersonComponent implements OnInit {
+export class PersonsItemComponent implements OnInit {
   personService: PersonService = inject(PersonService);
   person = input.required<Person>();
   list = input.required<string>();

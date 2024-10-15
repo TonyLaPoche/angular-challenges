@@ -6,23 +6,23 @@ import { Genre, Person } from './person';
   providedIn: 'root',
 })
 export class PersonService {
-  private readonly girlList = signal<Person[]>(
+  readonly #girls = signal<Person[]>(
     randFirstName<Genre>({
       gender: 'female',
       length: 10,
     }).map((girl) => ({ name: girl, id: crypto.randomUUID() })),
   );
 
-  Girls = this.girlList.asReadonly();
+  readonly girls = this.#girls.asReadonly();
 
-  private readonly boyList = signal<Person[]>(
+  readonly #boys = signal<Person[]>(
     randFirstName<Genre>({ gender: 'male', length: 10 }).map((boy) => ({
       name: boy,
       id: crypto.randomUUID(),
     })),
   );
 
-  Boys = this.boyList.asReadonly();
+  readonly boys = this.#boys.asReadonly();
 
   addPerson(listName: string, newPersonName: string) {
     const list: WritableSignal<Person[]> = this.getListByName(listName);
@@ -49,6 +49,6 @@ export class PersonService {
   }
 
   private getListByName(listName: string): WritableSignal<Person[]> {
-    return listName === 'Male' ? this.boyList : this.girlList;
+    return listName === 'Male' ? this.#boys : this.#girls;
   }
 }

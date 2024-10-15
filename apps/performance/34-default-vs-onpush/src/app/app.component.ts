@@ -1,24 +1,24 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { PersonListComponent } from './person-list.component';
 import { PersonService } from './person.service';
+import { PersonsComponent } from './persons.component';
 import { RandomComponent } from './random.component';
 
 @Component({
   standalone: true,
-  imports: [PersonListComponent, RandomComponent],
+  imports: [RandomComponent, PersonsComponent],
   selector: 'app-root',
   template: `
     <app-random />
 
     <div class="flex">
-      <app-person-list [names]="girlList()" title="Female" />
-      <app-person-list [names]="boyList()" title="Male" />
+      <app-persons [names]="boys()" title="Male"></app-persons>
+      <app-persons [names]="girls()" title="Female"></app-persons>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   personService: PersonService = inject(PersonService);
-  girlList = this.personService.Girls;
-  boyList = this.personService.Boys;
+  girls = this.personService.girls;
+  boys = this.personService.boys;
 }
