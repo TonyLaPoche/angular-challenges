@@ -1,6 +1,13 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  NgZone,
+  inject,
+} from '@angular/core';
+import { BehaviorSubject, fromEvent } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 @Component({
   standalone: true,
@@ -10,7 +17,8 @@ import { BehaviorSubject } from 'rxjs';
     <div>Top</div>
     <div>Middle</div>
     <div>Bottom</div>
-    <button (click)="goToTop()" *ngIf="displayButton$ | async">Top</button>
+    <button *ngIf="displayButton$ | async" (click)="goToTop()">Top</button>
+    <button (click)="trig()">BUTTON</button>
   `,
   styles: [
     `
@@ -30,17 +38,31 @@ import { BehaviorSubject } from 'rxjs';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  title = 'scroll-cd';
-
-  private displayButtonSubject = new BehaviorSubject<boolean>(false);
+  private readonly displayButtonSubject = new BehaviorSubject<boolean>(false);
   displayButton$ = this.displayButtonSubject.asObservable();
+  private readonly zone = inject(NgZone); // Injection de NgZone
+  private readonly cdr = inject(ChangeDetectorRef); // Injection de ChangeDetectorRef
 
-  @HostListener('window:scroll', ['$event'])
-  onScroll() {
-    const pos = window.pageYOffset;
-    this.displayButtonSubject.next(pos > 50);
+  constructor() {
+    // Sortir de la zone Angular pour éviter les détections de changements inutiles pendant le scroll
+    this.zone.runOutsideAngular(() => {
+      fromEvent(window, 'scroll')
+        .pipe(
+          map(() => window.scrollY > 50),
+          distinctUntilChanged(), // Ne réagit que lorsque la valeur change (true <=> false)
+        )
+        .subscribe((shouldShowButton) => {
+          // Rentrer dans la zone Angular uniquement si un changement est nécessaire
+          this.zone.run(() => {
+            this.displayButtonSubject.next(shouldShowButton);
+            // Déclencher manuellement la détection de changement
+            this.cdr.detectChanges();
+          });
+        });
+    });
   }
 
   goToTop() {
@@ -49,5 +71,9 @@ export class AppComponent {
       left: 0,
       behavior: 'smooth',
     });
+  }
+
+  trig() {
+    console.log('Create Event');
   }
 }
