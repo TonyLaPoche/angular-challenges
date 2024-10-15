@@ -15,10 +15,12 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
   selector: 'app-root',
   template: `
     <div>Top</div>
-    <div>Middle</div>
+    <div>
+      Middle
+      <button class="relative" (click)="trig()">BUTTON</button>
+    </div>
     <div>Bottom</div>
     <button *ngIf="displayButton$ | async" (click)="goToTop()">Top</button>
-    <button (click)="trig()">BUTTON</button>
   `,
   styles: [
     `
@@ -27,7 +29,9 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-
+        div > button {
+          position: relative;
+        }
         button {
           position: fixed;
           bottom: 1rem;
